@@ -1,0 +1,96 @@
+#statsWrapper{
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background-color: #fff;
+}
+.stats{
+  border: 2px solid black;
+  border-radius: 5px;
+  margin: 10px auto 10px auto;
+  width: 200px;
+  text-align: center;
+  background-color: #e5ffff;
+}
+.stats-hover{
+  border: 2px solid black;
+  border-radius: 5px;
+  margin: 10px auto 10px auto;
+  width: 200px;
+  text-align: center;
+  background-color: #e5ffff;
+  box-shadow: 0 0 25px #fe9a9a;
+}
+.stats-selected{
+  border: 4px solid red;
+  border-radius: 5px;
+  margin: 10px auto 10px auto;
+  width: 200px;
+  text-align: center;
+  background-color: #e5ffff;
+  box-shadow: 0 0 25px #fe9a9a;
+}
+
+.statName{
+  font-size: 110%;
+  font-weight: bold;
+}
+.text{
+  font-size: 150%;
+  
+  margin-bottom: -15px;
+  margin-top: -5px;
+}
+.text::first-letter{
+  text-transform: uppercase;
+}
+
+.image{
+  margin: 10px 0 0 0;
+  image-rendering: pixelated;
+  width: 100%;
+  position: relative;
+}
+.detailStats{
+  text-align: left;
+}
+.detailStats>li::first-letter{
+  text-transform: uppercase;
+}
+.detailStatsValue{
+  font-weight: bold;
+  float: right;
+  margin-right: 15px;
+  
+}
+
+.selectButton{
+  background-color: inherit;
+  width: 70%;
+  border: 3px solid orange;
+  border-radius: 6px;
+  
+  font-weight: bold;
+}
+.selectButton:hover{
+  background-color: #befebe;
+  border: 3px solid #fedca9;
+}
+
+
+#loading{
+  width: 250px;
+  height: 70px;
+  margin: 10px auto 10px auto;
+  top: 30vh;
+  
+  border-radius: 5px;
+  border: 2px solid black;
+  background-color: #ff9500;
+  
+  text-align: center;
+  font-size: 50px;
+}
+.loadingImg{
+  width: 200px;
+  height: 200px;
+}
