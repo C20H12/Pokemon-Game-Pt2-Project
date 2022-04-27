@@ -19,16 +19,29 @@ const App = () => {
   }, []);
 
 
-  const [elementClass, setElementClass] = useState("stats");
-  const [selectText, setSelectText] = useState("SELECT");
-  const setValuesAndFunction = [elementClass, setElementClass, selectText, setSelectText];
+  const [selectedPokemonsCounter, setSelectedPokemonsCounter] = useState(3);
+  const [canSelect, setCanSelect] = useState(true);
 
+  const [resetSelectedClass, setResetSelectedClass] = useState(false);
+
+  
   if(loading) return <div id="loading">LOADING...</div>
   
   return (
     <>
-      <SelectCounter />
-      <PokemonStatList pokemonStats={stat} functions={setValuesAndFunction}/>
+      <SelectCounter 
+        count={selectedPokemonsCounter}
+        setCount={setSelectedPokemonsCounter}
+        setCanSelect={setCanSelect}
+        setReset={setResetSelectedClass}
+      />
+      <PokemonStatList 
+        pokemonStats={stat} 
+        setFunction={setSelectedPokemonsCounter}
+        canSelect={canSelect}
+        setCanSelect={setCanSelect}
+        shouldReset={resetSelectedClass}
+      />
     </>
     
   );
