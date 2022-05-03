@@ -73,7 +73,7 @@
   font-weight: bold;
 }
 .selectButton:hover{
-  background-color: #befebe;
+  background-color: #66ff66;
   border: 3px solid #fedca9;
 }
 
@@ -113,3 +113,33 @@
   z-index: 5;
   text-align: center;
 }
+.counter>h1{
+  margin: .1em;
+}
+.counter>h3{
+  margin: .5em 0 1em 0;
+}
+
+.goButton{
+  width: 50%;
+  height: 30px;
+  
+  background-color: #b3ffb3;
+  border: 2px solid black;
+  border-radius: 15px;
+  
+  color: blue;
+  font-weight: bold;
+}
+.goButton:disabled{
+  background-color: #ff8a8a;
+  border: 2px solid grey;
+  color: grey;
+}
+.goButton:enabled:hover{
+  background-color: #e5ffeb;
+  border: 2px solid #66ff66;
+  color: #ff8a8a;
+}
+
+
