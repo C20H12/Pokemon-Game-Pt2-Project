@@ -1,7 +1,6 @@
 import React, {useState,useEffect,useRef} from "react"
 import axios from "axios"
 
-
 function PokemonStatsImg(props){
   const {
   pokemon, 
@@ -27,18 +26,22 @@ function PokemonStatsImg(props){
         if(isMounted){          
           setDetailStats(json.data);
           setLoading(false);
+          setEnemySelectedIds.current = [...setEnemySelectedIds.current, id];
           if(shouldSetEnemy) {  
             sessionStorage.setItem("enem"+id, JSON.stringify(json.data.stats));
-            sessionStorage.setItem('enemimg'+id, `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`)
-            setEnemCounter(num => num-1);
-            setEnemySelectedIds(arr => arr=[...arr, id]);
+            setEnemCounter(num => {
+              if (num <= 0) {
+                sessionStorage.removeItem('enem'+id);
+                setEnemySelectedIds.current = 
+                    setEnemySelectedIds.current.filter(e => e !== id);
+                return num = num;
+              }
+              else return num -= 1;
+            });
           }
         }
       });
     return () => {
-      sessionStorage.removeItem('enem'+id);
-      sessionStorage.removeItem('enemimg'+id);
-      setEnemCounter(num => num = 3);
       return isMounted = false;
     }
   }, []);
@@ -56,7 +59,7 @@ function PokemonStatsImg(props){
       setSelectText(t => t="SELECT");
       setCounter(num => num+1);
       
-      setPlayerSelectedIds(arr => arr = arr.splice(indexOf(id), 1));
+      setPlayerSelectedIds.current = setPlayerSelectedIds.current.filter(e => e !== id);
       sessionStorage.removeItem(id);
       sessionStorage.removeItem('img'+id)
     }else{
@@ -64,15 +67,14 @@ function PokemonStatsImg(props){
       setSelectText(t => t="DESELECT");
       setCounter(num => num-1);
 
-      setPlayerSelectedIds(arr => arr = arr = [...arr, id]);
+      setPlayerSelectedIds.current = [...setPlayerSelectedIds.current, id];
       sessionStorage.setItem(id, JSON.stringify(detailStats.stats));
-      sessionStorage.setItem('img'+id, `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`)
     }
   }
   
 
 
-  if (loading) return <img src="../../loading.gif" className="loadingImg"/>
+  if (loading) return <img src="../../loading.gif" className="loadingImg"/>;
 
   
   return (

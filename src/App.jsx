@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import axios from "axios";
 import './App.css';
 import PokemonStatList from './components/PokemonStatList.jsx';
@@ -28,18 +28,17 @@ const App = () => {
 
   const [shouldStart, setShouldStart] = useState(false);
   
-  const [playerSelectedIds, setPlayerSelectedIds] = useState([]);
-  const [enemySelectedIds, setEnemySelectedIds] = useState([]);
+  const playerSelectedIds= useRef([]);
+  const enemySelectedIds= useRef([]);
   
   if(loading) return <div id="loading">LOADING...</div>;
 
 
   if(shouldStart) {
-    
     return (
       <BattleUi 
         playerIds={playerSelectedIds}
-        enemyIds={enemySelectedIds}  
+        enemyIds={enemySelectedIds}
       />);
   }
   
@@ -54,8 +53,8 @@ const App = () => {
         pokemonStats={stat} 
         setFunction={setSelectedPokemonsCounter}
         setEnemyFunction={setEnemyPokemonsCounter}
-        setPlayerSelectedIds={setPlayerSelectedIds}
-        setEnemySelectedIds={setEnemySelectedIds}
+        setPlayerSelectedIds={playerSelectedIds}
+        setEnemySelectedIds={enemySelectedIds}
       />
     </>
   );
