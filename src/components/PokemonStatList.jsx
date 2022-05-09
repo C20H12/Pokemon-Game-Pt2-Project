@@ -3,7 +3,14 @@ import axios from "axios"
 
 
 function PokemonStatsImg(props){
-  const {pokemon, id, setCounter, setEnemCounter, shouldSetEnemy} = props;
+  const {
+  pokemon, 
+  id, 
+  setCounter, 
+  setEnemCounter, 
+  shouldSetEnemy,
+  setPlayerSelectedIds,
+  setEnemySelectedIds} = props;
 
   const [elementClass, setElementClass] = useState("stats");
   const [selectText, setSelectText] = useState("SELECT");
@@ -12,7 +19,8 @@ function PokemonStatsImg(props){
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    setLoading(true);    
+    setLoading(true);
+    
     let isMounted = true;
     axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
       .then(json => {
@@ -20,12 +28,19 @@ function PokemonStatsImg(props){
           setDetailStats(json.data);
           setLoading(false);
           if(shouldSetEnemy) {  
-            sessionStorage.setItem("enem"+id, JSON.stringify(json.data));
+            sessionStorage.setItem("enem"+id, JSON.stringify(json.data.stats));
+            sessionStorage.setItem('enemimg'+id, `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`)
             setEnemCounter(num => num-1);
+            setEnemySelectedIds(arr => arr=[...arr, id]);
           }
         }
       });
-    return () => isMounted = false;
+    return () => {
+      sessionStorage.removeItem('enem'+id);
+      sessionStorage.removeItem('enemimg'+id);
+      setEnemCounter(num => num = 3);
+      return isMounted = false;
+    }
   }, []);
 
 
@@ -41,13 +56,17 @@ function PokemonStatsImg(props){
       setSelectText(t => t="SELECT");
       setCounter(num => num+1);
       
+      setPlayerSelectedIds(arr => arr = arr.splice(indexOf(id), 1));
       sessionStorage.removeItem(id);
+      sessionStorage.removeItem('img'+id)
     }else{
       setElementClass("stats-selected");
       setSelectText(t => t="DESELECT");
       setCounter(num => num-1);
-      
-      sessionStorage.setItem(id, JSON.stringify(detailStats));
+
+      setPlayerSelectedIds(arr => arr = arr = [...arr, id]);
+      sessionStorage.setItem(id, JSON.stringify(detailStats.stats));
+      sessionStorage.setItem('img'+id, `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`)
     }
   }
   
@@ -74,14 +93,14 @@ function PokemonStatsImg(props){
           return <li key={i}>{value.stat.name}<span className="detailStatsValue">{value.base_stat}</span></li>
         })
       }
-      <li>
-        Types:
-        {
-          detailStats.types.map((type, i) => {
-            return <span className="detailStatsValue" key={i}> +{type.type.name}</span>
-          })
-        }
-      </li>
+        <li>
+          Types:
+          {
+            detailStats.types.map((type, i) => {
+              return <span className="detailStatsValue" key={i}> +{type.type.name}</span>
+            })
+          }
+        </li>
       </ul>
       
       <button onClick={handleClick} className="selectButton">{selectText}</button>
@@ -94,7 +113,9 @@ function PokemonStatsImg(props){
 export default function PokemonStatList(props){
 
   /**
-  * @return: Array<number> Each element will be a unique int
+  * Function to get an array of 3 random numbers
+  * Highly inefficient: O((n-1)*n!)
+  * @return: number[] -- Each element will be a unique int
   **/
   const getRandomNums = () => {
     const arr = Array.from({length: 3}, () => Math.floor(Math.random() * 400));
@@ -119,6 +140,8 @@ export default function PokemonStatList(props){
               setCounter={props.setFunction}
               setEnemCounter={props.setEnemyFunction}
               shouldSetEnemy={enemyIds.includes(parseInt(id,10)-1)}
+              setPlayerSelectedIds={props.setPlayerSelectedIds}
+              setEnemySelectedIds={props.setEnemySelectedIds}
             />
           )
         })

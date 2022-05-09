@@ -7,6 +7,7 @@ import BattleUi from "./components/BattleUi.jsx"
 
 
 const App = () => {
+  
   const [stat, setStat] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -27,9 +28,20 @@ const App = () => {
 
   const [shouldStart, setShouldStart] = useState(false);
   
-  if(loading) return <div id="loading">LOADING...</div>
+  const [playerSelectedIds, setPlayerSelectedIds] = useState([]);
+  const [enemySelectedIds, setEnemySelectedIds] = useState([]);
+  
+  if(loading) return <div id="loading">LOADING...</div>;
 
-  if(shouldStart) return <BattleUi/>;
+
+  if(shouldStart) {
+    
+    return (
+      <BattleUi 
+        playerIds={playerSelectedIds}
+        enemyIds={enemySelectedIds}  
+      />);
+  }
   
   return (
     <>
@@ -42,6 +54,8 @@ const App = () => {
         pokemonStats={stat} 
         setFunction={setSelectedPokemonsCounter}
         setEnemyFunction={setEnemyPokemonsCounter}
+        setPlayerSelectedIds={setPlayerSelectedIds}
+        setEnemySelectedIds={setEnemySelectedIds}
       />
     </>
   );

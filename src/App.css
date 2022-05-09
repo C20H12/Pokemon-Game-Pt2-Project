@@ -143,3 +143,20 @@
 }
 
 
+.battleTitle{
+  text-align: center;
+  margin: 1em 0;
+  font-style: italic;
+  color: #ff2424;
+}
+
+.battleUiWindow{
+  border: 4px solid #747272;
+  border-radius: 20px;
+  width: 70vw;
+  height: 80vh;
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  padding: 1em;
+}
