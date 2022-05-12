@@ -26,12 +26,11 @@ function PokemonStatsImg(props){
         if(isMounted){          
           setDetailStats(json.data);
           setLoading(false);
-          setEnemySelectedIds.current = [...setEnemySelectedIds.current, id];
           if(shouldSetEnemy) {  
-            sessionStorage.setItem("enem"+id, JSON.stringify(json.data.stats));
+            setEnemySelectedIds.current = [...setEnemySelectedIds.current, id];
+            
             setEnemCounter(num => {
               if (num <= 0) {
-                sessionStorage.removeItem('enem'+id);
                 setEnemySelectedIds.current = 
                     setEnemySelectedIds.current.filter(e => e !== id);
                 return num = num;
@@ -60,15 +59,14 @@ function PokemonStatsImg(props){
       setCounter(num => num+1);
       
       setPlayerSelectedIds.current = setPlayerSelectedIds.current.filter(e => e !== id);
-      sessionStorage.removeItem(id);
-      sessionStorage.removeItem('img'+id)
+      
     }else{
       setElementClass("stats-selected");
       setSelectText(t => t="DESELECT");
       setCounter(num => num-1);
 
       setPlayerSelectedIds.current = [...setPlayerSelectedIds.current, id];
-      sessionStorage.setItem(id, JSON.stringify(detailStats.stats));
+      
     }
   }
   
@@ -111,21 +109,20 @@ function PokemonStatsImg(props){
   )
 }
 
-
-export default function PokemonStatList(props){
-
-  /**
+/**
   * Function to get an array of 3 random numbers
   * Highly inefficient: O((n-1)*n!)
   * @return: number[] -- Each element will be a unique int
   **/
-  const getRandomNums = () => {
-    const arr = Array.from({length: 3}, () => Math.floor(Math.random() * 400));
-    if (arr[1]!==arr[2] && arr[2]!==arr[3] && arr[1]!==arr[3])
-      return arr;
-    else 
-      return getRandomNums();
-  }
+const getRandomNums = () => {
+  const arr = Array.from({length: 3}, () => Math.floor(Math.random() * 400));
+  if (arr[1]!==arr[2] && arr[2]!==arr[3] && arr[1]!==arr[3])
+    return arr;
+  else 
+    return getRandomNums();
+}
+
+export default function PokemonStatList(props){
   
   const enemyIds = getRandomNums();
   

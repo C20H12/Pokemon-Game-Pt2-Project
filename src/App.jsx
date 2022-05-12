@@ -14,7 +14,7 @@ const App = () => {
 
   useEffect(() => {
     setLoading(true);
-    sessionStorage.clear();
+
     axios.get("https://pokeapi.co/api/v2/pokemon/?limit=400")
       .then(json => {
         setLoading(false);
@@ -39,6 +39,7 @@ const App = () => {
       <BattleUi 
         playerIds={playerSelectedIds}
         enemyIds={enemySelectedIds}
+        pokemonStats={stat}
       />);
   }
   

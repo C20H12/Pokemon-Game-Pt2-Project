@@ -154,9 +154,79 @@
   border: 4px solid #747272;
   border-radius: 20px;
   width: 70vw;
-  height: 80vh;
-  display: flex;
-  justify-content: space-between;
+  height: 750px;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  justify-items: center;
   margin: auto;
   padding: 1em;
 }
+.battleUiWindow img {
+  width: 140px;
+  image-rendering: pixelated;
+}
+.enemyWrap {
+  grid-column-start: 3;
+  padding-top: 19em;
+}
+
+.controls>button {
+  display: block;
+  margin: 1em auto;
+  font-family: inherit;
+  font-size: 20px;
+  border: none;
+  width: 100%;
+  background: rgba(255, 162, 0, .4);
+}
+.controls>button:hover {
+  background: rgba(255, 162, 0, .8);
+}
+
+.player {
+  position: relative;
+}
+.player .playerDetails {
+  position: absolute;
+  right: 8em;
+  bottom: 3em;
+  border: 2px solid black;
+  border-radius: 15px;
+  padding: 1em;
+  background: rgba(222, 255, 222, 0.8);
+}
+
+.enemy {
+  position: relative;
+}
+.enemy .enemyDetails {
+  position: absolute;
+  left: 8em;
+  bottom: 3em;
+  border: 2px solid black;
+  border-radius: 15px;
+  padding: 1em;
+  background: rgba(222, 255, 222, 0.8);
+}
+
+progress.bar {
+  -webkit-appearance: none;
+}
+progress.bar::-webkit-progress-bar {
+  background-color: #eee;
+  box-shadow: 0 2px 2px #828282 inset;
+  border-radius: 1em;
+}
+progress.bar::-webkit-progress-value {
+  background-color: #1bda1e;
+  border-radius: 1em;
+}
+progress.bar.under25::-webkit-progress-value {
+  background-color: #da1b1b;
+  border-radius: 1em;
+}
+progress.bar.under60::-webkit-progress-value {
+  background-color: #d7da1b;
+  border-radius: 1em;
+}
+
