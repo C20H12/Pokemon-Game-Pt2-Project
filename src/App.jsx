@@ -15,7 +15,7 @@ const App = () => {
   useEffect(() => {
     setLoading(true);
 
-    axios.get("https://pokeapi.co/api/v2/pokemon/?limit=400")
+    axios.get("https://pokeapi.co/api/v2/pokemon/?limit=100")
       .then(json => {
         setLoading(false);
         setStat(json.data.results)
@@ -31,6 +31,9 @@ const App = () => {
   const playerSelectedIds= useRef([]);
   const enemySelectedIds= useRef([]);
   
+  const playerSelectedStats= useRef([]);
+  const enemySelectedStats= useRef([]);
+  
   if(loading) return <div id="loading">LOADING...</div>;
 
 
@@ -39,7 +42,8 @@ const App = () => {
       <BattleUi 
         playerIds={playerSelectedIds}
         enemyIds={enemySelectedIds}
-        pokemonStats={stat}
+        playerStats={playerSelectedStats}
+        enemyStats={enemySelectedStats}
       />);
   }
   
@@ -56,6 +60,8 @@ const App = () => {
         setEnemyFunction={setEnemyPokemonsCounter}
         setPlayerSelectedIds={playerSelectedIds}
         setEnemySelectedIds={enemySelectedIds}
+        setPlayerSelectedStats={playerSelectedStats}
+        setEnemySelectedStats={enemySelectedStats}
       />
     </>
   );

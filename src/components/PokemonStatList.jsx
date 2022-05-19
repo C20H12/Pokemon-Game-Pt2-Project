@@ -9,7 +9,10 @@ function PokemonStatsImg(props){
   setEnemCounter, 
   shouldSetEnemy,
   setPlayerSelectedIds,
-  setEnemySelectedIds} = props;
+  setEnemySelectedIds,
+  setPlayerSelectedStats,
+  setEnemySelectedStats,    
+  } = props;
 
   const [elementClass, setElementClass] = useState("stats");
   const [selectText, setSelectText] = useState("SELECT");
@@ -21,13 +24,13 @@ function PokemonStatsImg(props){
     setLoading(true);
     
     let isMounted = true;
-    axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
-      .then(json => {
-        if(isMounted){          
+    axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`).then((json) => {
+        if(isMounted){
           setDetailStats(json.data);
           setLoading(false);
           if(shouldSetEnemy) {  
             setEnemySelectedIds.current = [...setEnemySelectedIds.current, id];
+            setEnemySelectedStats.current = [...setEnemySelectedStats.current, json.data.stats];
             
             setEnemCounter(num => {
               if (num <= 0) {
@@ -59,24 +62,25 @@ function PokemonStatsImg(props){
       setCounter(num => num+1);
       
       setPlayerSelectedIds.current = setPlayerSelectedIds.current.filter(e => e !== id);
-      
+      setPlayerSelectedStats.current = setPlayerSelectedStats.current.filter(e => e !== detailStats.stats);      
     }else{
       setElementClass("stats-selected");
       setSelectText(t => t="DESELECT");
       setCounter(num => num-1);
 
       setPlayerSelectedIds.current = [...setPlayerSelectedIds.current, id];
-      
+      setPlayerSelectedStats.current = [...setPlayerSelectedStats.current, detailStats.stats];
     }
   }
   
-
 
   if (loading) return <img src="../../loading.gif" className="loadingImg"/>;
 
   
   return (
-    <div id={id} className={elementClass} 
+    <div 
+      id={id} 
+      className={elementClass} 
       onMouseEnter={handleHover} 
       onMouseLeave={handleHover}
     >
@@ -113,9 +117,9 @@ function PokemonStatsImg(props){
   * Function to get an array of 3 random numbers
   * Highly inefficient: O((n-1)*n!)
   * @return: number[] -- Each element will be a unique int
-  **/
+  */
 const getRandomNums = () => {
-  const arr = Array.from({length: 3}, () => Math.floor(Math.random() * 400));
+  const arr = Array.from({length: 3}, () => Math.floor(Math.random() * 100));
   if (arr[1]!==arr[2] && arr[2]!==arr[3] && arr[1]!==arr[3])
     return arr;
   else 
@@ -141,6 +145,8 @@ export default function PokemonStatList(props){
               shouldSetEnemy={enemyIds.includes(parseInt(id,10)-1)}
               setPlayerSelectedIds={props.setPlayerSelectedIds}
               setEnemySelectedIds={props.setEnemySelectedIds}
+              setPlayerSelectedStats={props.setPlayerSelectedStats}
+              setEnemySelectedStats={props.setEnemySelectedStats}
             />
           )
         })

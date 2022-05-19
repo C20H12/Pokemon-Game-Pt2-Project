@@ -218,15 +218,15 @@ progress.bar::-webkit-progress-bar {
   border-radius: 1em;
 }
 progress.bar::-webkit-progress-value {
-  background-color: #1bda1e;
+  background: linear-gradient(180deg, rgba(105,224,88,1) 0%, rgba(116,222,21,1) 46%, rgba(4,145,21,1) 100%);
   border-radius: 1em;
 }
 progress.bar.under25::-webkit-progress-value {
-  background-color: #da1b1b;
+  background: linear-gradient(180deg, rgba(250,110,72,1) 0%, rgba(221,111,15,1) 46%, rgba(133,9,9,1) 100%);  
   border-radius: 1em;
 }
 progress.bar.under60::-webkit-progress-value {
-  background-color: #d7da1b;
+  background: linear-gradient(180deg, rgba(237,241,78,1) 0%, rgba(216,221,15,1) 46%, rgba(143,87,2,1) 100%);
   border-radius: 1em;
 }
 
