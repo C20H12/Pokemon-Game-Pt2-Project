@@ -186,6 +186,11 @@
 .player {
   position: relative;
 }
+.playerSelected {
+  position: relative;
+  box-shadow: 0 0 15px #002aff inset;
+  border-radius: 15px;
+}
 .playerDetails {
   position: absolute;
   right: 8em;

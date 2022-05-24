@@ -5,17 +5,6 @@ import {
 } from "./BattlePlayerAndEnemy.jsx";
 import { reducerFn } from "./reducer.jsx";
 
-/**
- * Function that gets a random integer between 2 numbers, inclusive
- * @param {number} min - the minimum in the number range
- * @param {number} max - the maximum in the number range
- * @returns {number} - a random integer number
- */
-function randint(min, max) {
-  return Math.floor(
-    Math.random() * (Math.ceil(max) - Math.floor(min) + 1) + Math.ceil(min)
-  );
-}
 
 /**
  * The component for the main battle window
@@ -54,14 +43,17 @@ export default function BattleUi(props) {
   const [statsState, statsDispatch] = useReducer(reducerFn, defaultStats);
 
   const [selectedTarget, setSelectedTarget] = useState(0);
+  const [selectedAttacker, setSelectedAttacker] = useState(0);
+
+  const [isSelectedAsTargetArr, setIsSelectedAsTargetArr] = useState([false, false, false]);
+  const [isSelectedAsAttackerArr, setIsSelectedAsAttackerArr] = useState([false, false, false]);
 
   const handleAttack1 = () => {
-    const attack = defaultStats.players[0].attack;
     const dispObj = {
       type: "ATTACK",
       payload: {
-        id: selectedTarget,
-        amount: randint(attack * 0.05, attack * 0.1),
+        targetId: selectedTarget,
+        attackerId: selectedAttacker,
       },
     };
     statsDispatch(dispObj);
@@ -78,7 +70,10 @@ export default function BattleUi(props) {
                 id={playerIds.current[i]}
                 key={i}
                 stats={player}
-                setTarget={setSelectedTarget}
+                setAttacker={setSelectedAttacker}
+                idx={i}
+                isSelected={isSelectedAsAttackerArr[i]}
+                setIsSelected={setIsSelectedAsAttackerArr}
               />
             );
           })}
@@ -96,6 +91,9 @@ export default function BattleUi(props) {
                 key={i}
                 stats={enem}
                 setTarget={setSelectedTarget}
+                idx={i}
+                isSelected={isSelectedAsTargetArr[i]}
+                setIsSelected={setIsSelectedAsTargetArr}
               />
             );
           })}

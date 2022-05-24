@@ -10,19 +10,31 @@ import BattleInfoBox from "./BattleInfoBox.jsx";
  * @returns {JSX.Element} - an element containing the pokemon's image and it's info box
  */
 export function BattlePlayer(props) {
-  const { id, stats, setTarget } = props;
+  const { id, stats, setAttacker, idx, isSelected, setIsSelected } = props;
 
   const [shouldShowInfo, setShouldShowInfo] = useState(false);
 
   const handleShowInfo = () => {
     setShouldShowInfo(bool => (bool = !bool));
   };
-
+  
+  const handleSelect = () => {
+    setAttacker(id);
+    setIsSelected(arr => {
+      if (arr[idx]) return arr;
+      return arr
+        .slice()
+        .fill(false)
+        .fill(!arr[idx], idx, idx + 1);
+    });
+  }
+  
   return (
     <div
-      className="player"
+      className={isSelected ? "playerSelected" : "player"}
       onMouseEnter={handleShowInfo}
       onMouseLeave={handleShowInfo}
+      onClick={handleSelect}
     >
       <img
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
@@ -48,29 +60,32 @@ export function BattlePlayer(props) {
  */
 
 export function BattleEnemy(props) {
-  const { id, stats, setTarget } = props;
+  const { id, stats, setTarget, idx, isSelected, setIsSelected } = props;
 
   const [shouldShowInfo, setShouldShowInfo] = useState(false);
 
-  const [isSelectedAsTarget, setIsSelectedAsTarget] = useState(false);
 
   const handleShowInfo = () => {
     setShouldShowInfo(bool => (bool = !bool));
   };
 
+  const handleSelect = () => {
+    setTarget(id);
+    setIsSelected(arr => {
+      if (arr[idx]) return arr;
+      return arr
+        .slice()
+        .fill(false)
+        .fill(!arr[idx], idx, idx + 1);
+    });
+  }
+
   return (
     <div
-      className={isSelectedAsTarget ? "enemySelected" : "enemy"}
+      className={isSelected ? "enemySelected" : "enemy"}
       onMouseEnter={handleShowInfo}
       onMouseLeave={handleShowInfo}
-      onClick={() => {
-        setTarget(id);
-        setIsSelectedAsTarget(bool => {
-          if (bool) return bool;
-          return !bool
-          // TODO : move the select state to ui
-        });
-      }}
+      onClick={handleSelect}
     >
       <img
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
