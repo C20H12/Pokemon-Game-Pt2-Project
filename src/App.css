@@ -186,7 +186,7 @@
 .player {
   position: relative;
 }
-.player .playerDetails {
+.playerDetails {
   position: absolute;
   right: 8em;
   bottom: 3em;
@@ -199,7 +199,12 @@
 .enemy {
   position: relative;
 }
-.enemy .enemyDetails {
+.enemySelected {
+  position: relative;
+  box-shadow: 0 0 15px red inset;
+  border-radius: 15px;
+}
+.enemyDetails {
   position: absolute;
   left: 8em;
   bottom: 3em;
