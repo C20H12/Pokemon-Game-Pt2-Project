@@ -172,6 +172,7 @@
 
 .controls>button {
   display: block;
+  position: relative;
   margin: 1em auto;
   font-family: inherit;
   font-size: 20px;
@@ -179,8 +180,22 @@
   width: 100%;
   background: rgba(255, 162, 0, .4);
 }
-.controls>button:hover {
+.controls>button:enabled:hover {
   background: rgba(255, 162, 0, .8);
+  cursor: pointer;
+}
+.controls>button:disabled {
+  background-color: #b6a48f;
+  cursor: no-drop;
+}
+.controls>button:disabled:hover::after {
+  content: "Need to select a target and an attacker!";
+  position: absolute;
+  border: 2px solid red;
+  border-radius: 15px;
+  color:rgba(255, 162, 0, .8);
+  left: calc(100% + 1em);
+  width: 10em;
 }
 
 .player {

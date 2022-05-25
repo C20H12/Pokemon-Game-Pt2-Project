@@ -17,7 +17,7 @@ export function BattlePlayer(props) {
   const handleShowInfo = () => {
     setShouldShowInfo(bool => (bool = !bool));
   };
-  
+
   const handleSelect = () => {
     setAttacker(id);
     setIsSelected(arr => {
@@ -27,8 +27,8 @@ export function BattlePlayer(props) {
         .fill(false)
         .fill(!arr[idx], idx, idx + 1);
     });
-  }
-  
+  };
+
   return (
     <div
       className={isSelected ? "playerSelected" : "player"}
@@ -64,7 +64,6 @@ export function BattleEnemy(props) {
 
   const [shouldShowInfo, setShouldShowInfo] = useState(false);
 
-
   const handleShowInfo = () => {
     setShouldShowInfo(bool => (bool = !bool));
   };
@@ -78,7 +77,7 @@ export function BattleEnemy(props) {
         .fill(false)
         .fill(!arr[idx], idx, idx + 1);
     });
-  }
+  };
 
   return (
     <div

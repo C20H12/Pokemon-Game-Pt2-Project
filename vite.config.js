@@ -8,11 +8,5 @@ export default {
   plugins: [reactRefresh()],
   build: {
     chunkSizeWarningLimit: 1600,
-  },
-  server: {
-    host: '0.0.0.0',
-    hmr: {
-      port: 443,
-    }
   }
 }

@@ -5,7 +5,6 @@ import {
 } from "./BattlePlayerAndEnemy.jsx";
 import { reducerFn } from "./reducer.jsx";
 
-
 /**
  * The component for the main battle window
  * @param {Object} props - values passed from app
@@ -45,8 +44,16 @@ export default function BattleUi(props) {
   const [selectedTarget, setSelectedTarget] = useState(0);
   const [selectedAttacker, setSelectedAttacker] = useState(0);
 
-  const [isSelectedAsTargetArr, setIsSelectedAsTargetArr] = useState([false, false, false]);
-  const [isSelectedAsAttackerArr, setIsSelectedAsAttackerArr] = useState([false, false, false]);
+  const [isSelectedAsTargetArr, setIsSelectedAsTargetArr] = useState([
+    false,
+    false,
+    false,
+  ]);
+  const [isSelectedAsAttackerArr, setIsSelectedAsAttackerArr] = useState([
+    false,
+    false,
+    false,
+  ]);
 
   const handleAttack1 = () => {
     const dispObj = {
@@ -77,11 +84,21 @@ export default function BattleUi(props) {
               />
             );
           })}
-          <div className="controls">
-            <button onClick={handleAttack1}>Attack 1</button>
-            <button>Attack 2</button>
-            <button>Attack 3</button>
-          </div>
+
+          {isSelectedAsAttackerArr.includes(true) &&
+          isSelectedAsTargetArr.includes(true) ? (
+            <div className="controls">
+              <button onClick={handleAttack1}>Attack 1</button>
+              <button>Attack 2</button>
+              <button>Attack 3</button>
+            </div>
+          ) : (
+            <div className="controls">
+              <button disabled>Attack 1</button>
+              <button disabled>Attack 2</button>
+              <button disabled>Attack 3</button>
+            </div>
+          )}
         </div>
         <div className="enemyWrap">
           {statsState.enemys.map((enem, i) => {

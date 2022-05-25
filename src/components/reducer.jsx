@@ -12,23 +12,28 @@
 export const reducerFn = (state, action) => {
   switch (action.type) {
     case "ATTACK":
-      const attackAmount = state.players.filter(player => player.id == action.payload.attackerId);
-      console.log(attackAmount)
+      const attackAmount = state.players.filter(
+        player => player.id === action.payload.attackerId
+      )[0].attack;
+
       return {
         players: state.players.map(elem => {
           if (elem.id == action.payload.attackerId) {
             return { ...elem, eg: elem.eg - 10 };
           } else {
-            return { ...elem};
+            return elem;
           }
         }),
         enemys: state.enemys.map(elem => {
           if (elem.id == action.payload.targetId) {
-            return { ...elem, hp: elem.hp - 1 };
+            return {
+              ...elem,
+              hp: elem.hp - randint(attackAmount * 0.05, attackAmount * 0.1),
+            };
           } else {
-            return { ...elem};
+            return elem;
           }
-        })
+        }),
       };
 
     case "MISSED":
@@ -38,7 +43,6 @@ export const reducerFn = (state, action) => {
       throw new Error("shit, wrong action type");
   }
 };
-
 
 /**
  * Function that gets a random integer between 2 numbers, inclusive
