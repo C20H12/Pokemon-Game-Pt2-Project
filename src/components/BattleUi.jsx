@@ -55,10 +55,11 @@ export default function BattleUi(props) {
     false,
   ]);
 
-  const handleAttack1 = () => {
+  const handleAttack = (e) => {
     const dispObj = {
       type: "ATTACK",
       payload: {
+        attackType: parseInt(e.target.dataset.attack, 10),
         targetId: selectedTarget,
         attackerId: selectedAttacker,
       },
@@ -88,9 +89,9 @@ export default function BattleUi(props) {
           {isSelectedAsAttackerArr.includes(true) &&
           isSelectedAsTargetArr.includes(true) ? (
             <div className="controls">
-              <button onClick={handleAttack1}>Attack 1</button>
-              <button>Attack 2</button>
-              <button>Attack 3</button>
+              <button data-attack="1" onClick={handleAttack}>Attack 1</button>
+              <button data-attack="2" onClick={handleAttack}>Attack 2</button>
+              <button data-attack="3" onClick={handleAttack}>Attack 3</button>
             </div>
           ) : (
             <div className="controls">

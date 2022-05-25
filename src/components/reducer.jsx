@@ -11,15 +11,30 @@
  */
 export const reducerFn = (state, action) => {
   switch (action.type) {
-    case "ATTACK":
+    case "ATTACK": {
       const attackAmount = state.players.filter(
         player => player.id === action.payload.attackerId
       )[0].attack;
 
+      let egCost, damage;
+      if (action.payload.attackType === 1){
+        egCost = randint(7, 15);
+        damage = randint(attackAmount * 0.05, attackAmount * 0.1);
+      }
+      else if (action.payload.attackType === 2){
+        egCost = randint(16, 25);
+        damage = randint(attackAmount * 0.1, attackAmount * 0.2);
+      }
+      else if (action.payload.attackType === 3){
+        egCost = randint(26, 35);
+        damage = randint(attackAmount * 0.2, attackAmount * 0.3);
+      }
+      
+
       return {
         players: state.players.map(elem => {
           if (elem.id == action.payload.attackerId) {
-            return { ...elem, eg: elem.eg - 10 };
+            return { ...elem, eg: elem.eg - egCost };
           } else {
             return elem;
           }
@@ -28,14 +43,14 @@ export const reducerFn = (state, action) => {
           if (elem.id == action.payload.targetId) {
             return {
               ...elem,
-              hp: elem.hp - randint(attackAmount * 0.05, attackAmount * 0.1),
+              hp: elem.hp - damage,
             };
           } else {
             return elem;
           }
         }),
       };
-
+    }
     case "MISSED":
       console.log(111);
 
