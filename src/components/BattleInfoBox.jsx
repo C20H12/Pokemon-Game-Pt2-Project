@@ -19,7 +19,7 @@ export default function BattleInfoBox(props) {
       {shouldShow ? (
         <div className={side + "Details"}>
           Health: &nbsp;
-          <label htmlFor={side + "Hp"}>{stats.hp}</label>
+          <label htmlFor={side + "Hp"}>{stats.hp <= 0 ? 'DEFEATED' : stats.hp}</label>
           <progress
             id={side + "Hp"}
             className={
@@ -33,7 +33,7 @@ export default function BattleInfoBox(props) {
             max={max.current}
           />
           Energy: &nbsp;
-          <label htmlFor={side + "Eg"}>{stats.eg}</label>
+          <label htmlFor={side + "Eg"}>{stats.eg <= 0 ? "DEPLETED" :stats.eg }</label>
           <progress
             id={side + "Eg"}
             className={

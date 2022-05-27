@@ -4,6 +4,7 @@
  * @param {Object} action - the object containing instructions of what action to perform
  * @param {string} action.type - the type of action
  * @param {Object} action.payload - the object containing values for the action
+ * @param {number} action.payload.attackType - the current attack move that is used
  * @param {number} action.payload.targetId - the target pokemon's id
  * @param {number} action.payload.attackerId - the attacker pokemon's id
  * @returns {Object} - the new, modified stats of the pokemon

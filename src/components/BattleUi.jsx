@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import {
   BattlePlayer as Player,
   BattleEnemy as Enemy,
@@ -41,8 +41,8 @@ export default function BattleUi(props) {
   };
   const [statsState, statsDispatch] = useReducer(reducerFn, defaultStats);
 
-  const [selectedTarget, setSelectedTarget] = useState(0);
-  const [selectedAttacker, setSelectedAttacker] = useState(0);
+  const [selectedTarget, setSelectedTarget] = useState(null);
+  const [selectedAttacker, setSelectedAttacker] = useState(null);
 
   const [isSelectedAsTargetArr, setIsSelectedAsTargetArr] = useState([
     false,
@@ -55,7 +55,41 @@ export default function BattleUi(props) {
     false,
   ]);
 
-  const handleAttack = (e) => {
+  const [isAttackAvailable, setIsAttackAvailable] = useState([
+    true,
+    true,
+    true,
+  ]);
+
+  const [isEnemyAlive, setIsEnemyAlive] = useState({
+    [statsState.enemys[0].id]: true,
+    [statsState.enemys[1].id]: true,
+    [statsState.enemys[2].id]: true,
+  });
+
+  useEffect(() => {
+    setIsAttackAvailable(arr => arr.slice().fill(true));
+    const currSelectionEg = getPokemonById(statsState, selectedAttacker)?.eg;
+
+    if (currSelectionEg < 15)
+      setIsAttackAvailable(arr => arr.slice().fill(false));
+    else if (currSelectionEg < 25) setIsAttackAvailable([true, false, false]);
+    else if (currSelectionEg < 35) setIsAttackAvailable([true, true, false]);
+  }, [selectedAttacker, statsState.players]);
+
+  useEffect(() => {
+    const currSelectionHp = getPokemonById(
+      statsState,
+      selectedTarget,
+      true
+    )?.hp;
+
+    console.log(currSelectionHp, isEnemyAlive);
+
+    if (currSelectionHp <= 0) isEnemyAlive[selectedTarget] = false;
+  }, [selectedTarget, statsState.enemys]);
+
+  const handleAttack = e => {
     const dispObj = {
       type: "ATTACK",
       payload: {
@@ -87,17 +121,59 @@ export default function BattleUi(props) {
           })}
 
           {isSelectedAsAttackerArr.includes(true) &&
-          isSelectedAsTargetArr.includes(true) ? (
+          isSelectedAsTargetArr.includes(true) &&
+          isEnemyAlive[selectedTarget] ? (
             <div className="controls">
-              <button data-attack="1" onClick={handleAttack}>Attack 1</button>
-              <button data-attack="2" onClick={handleAttack}>Attack 2</button>
-              <button data-attack="3" onClick={handleAttack}>Attack 3</button>
+              {Array(3)
+                .fill(null)
+                .map((_, i) => {
+                  return (
+                    <>
+                      {isAttackAvailable[i] ? (
+                        <button
+                          key={i}
+                          data-attack={i + 1}
+                          onClick={handleAttack}
+                          data-tip-text={`Will deal: ${ // TODO: add calculations to display the attack pts
+                            getPokemonById(statsState, selectedAttacker).attack * 0.5
+                          } points\nWill cost: ${
+                            getPokemonById(statsState, selectedAttacker).attack
+                          }`}
+                        >
+                          Attack {i + 1}
+                        </button>
+                      ) : (
+                        <button
+                          key={i}
+                          disabled
+                          data-tip-text="Not enough energy to use this move!"
+                        >
+                          Attack {i + 1}
+                        </button>
+                      )}
+                    </>
+                  );
+                })}
             </div>
           ) : (
             <div className="controls">
-              <button disabled>Attack 1</button>
-              <button disabled>Attack 2</button>
-              <button disabled>Attack 3</button>
+              {Array(3)
+                .fill(null)
+                .map((_, i) => {
+                  return (
+                    <button
+                      key={i}
+                      disabled
+                      data-tip-text={
+                        isEnemyAlive[selectedTarget] === false
+                          ? "The selected enemy has been killed!"
+                          : "Need to select a target and an attacker!"
+                      }
+                    >
+                      Attack {i + 1}
+                    </button>
+                  );
+                })}
             </div>
           )}
         </div>
@@ -119,4 +195,9 @@ export default function BattleUi(props) {
       </div>
     </>
   );
+}
+
+function getPokemonById(statsObj, id, isEnemy = false) {
+  if (isEnemy) return statsObj.enemys.filter(enem => enem.id === id)[0];
+  return statsObj.players.filter(player => player.id === id)[0];
 }

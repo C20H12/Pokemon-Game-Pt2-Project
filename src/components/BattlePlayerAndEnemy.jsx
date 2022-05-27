@@ -21,7 +21,7 @@ export function BattlePlayer(props) {
   const handleSelect = () => {
     setAttacker(id);
     setIsSelected(arr => {
-      if (arr[idx]) return arr;
+      if (arr[idx]) setAttacker(null);
       return arr
         .slice()
         .fill(false)
@@ -71,7 +71,7 @@ export function BattleEnemy(props) {
   const handleSelect = () => {
     setTarget(id);
     setIsSelected(arr => {
-      if (arr[idx]) return arr;
+      if (arr[idx]) setTarget(null);
       return arr
         .slice()
         .fill(false)
