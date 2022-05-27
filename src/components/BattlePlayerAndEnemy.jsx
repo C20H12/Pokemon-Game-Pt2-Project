@@ -56,11 +56,12 @@ export function BattlePlayer(props) {
  * @param {number} props.id - the id of this pokemon
  * @param {Object} props.stats - the full, mutated stats of this pokemon
  * @param {Function} props.setTarget - the function to select this pokemon
+ * @param {boolean} props.isAlive - is this pokemon alive?
  * @returns {JSX.Element} - an element containing the pokemon's image and it's info box
  */
 
 export function BattleEnemy(props) {
-  const { id, stats, setTarget, idx, isSelected, setIsSelected } = props;
+  const { id, stats, setTarget, idx, isSelected, setIsSelected, isAlive } = props;
 
   const [shouldShowInfo, setShouldShowInfo] = useState(false);
 
@@ -87,6 +88,7 @@ export function BattleEnemy(props) {
       onClick={handleSelect}
     >
       <img
+        className={isAlive ? null : "isDead"}
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
         alt="err"
       />

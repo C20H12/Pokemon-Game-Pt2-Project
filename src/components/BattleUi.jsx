@@ -3,7 +3,8 @@ import {
   BattlePlayer as Player,
   BattleEnemy as Enemy,
 } from "./BattlePlayerAndEnemy.jsx";
-import { reducerFn } from "./reducer.jsx";
+import { reducerFn } from "../functions/reducer.jsx";
+import { getPokemonById } from "../functions/utils.jsx";
 
 /**
  * The component for the main battle window
@@ -90,6 +91,8 @@ export default function BattleUi(props) {
   }, [selectedTarget, statsState.enemys]);
 
   const handleAttack = e => {
+    const dodge = getPokemonById(statsState, selectedTarget, true).speed;
+    console.log(dodge)
     const dispObj = {
       type: "ATTACK",
       payload: {
@@ -128,17 +131,23 @@ export default function BattleUi(props) {
                 .fill(null)
                 .map((_, i) => {
                   return (
-                    <>
+                    <React.Fragment key={i}>
                       {isAttackAvailable[i] ? (
                         <button
-                          key={i}
                           data-attack={i + 1}
                           onClick={handleAttack}
-                          data-tip-text={`Will deal: ${ // TODO: add calculations to display the attack pts
-                            getPokemonById(statsState, selectedAttacker).attack * 0.5
-                          } points\nWill cost: ${
-                            getPokemonById(statsState, selectedAttacker).attack
-                          }`}
+                          data-tip-text={(() => {
+                            const attk = getPokemonById(statsState, selectedAttacker).attack
+                            if (i === 0){
+                              return `Damage: ${~~(attk * 0.05)} - ${~~(attk * 0.1)} HP\n Costs: 7 - 15 EG`;
+                            }
+                            else if (i === 1){
+                              return `Damage: ${~~(attk * 0.1)} - ${~~(attk * 0.2)} HP\n Costs: 16 - 25 EG`;
+                            }
+                            else if (i === 2){
+                              return `Damage: ${~~(attk * 0.2)} - ${~~(attk * 0.3)} HP\n Costs: 26 - 35 EG`;
+                            }
+                          })()}
                         >
                           Attack {i + 1}
                         </button>
@@ -151,7 +160,7 @@ export default function BattleUi(props) {
                           Attack {i + 1}
                         </button>
                       )}
-                    </>
+                    </React.Fragment>
                   );
                 })}
             </div>
@@ -188,6 +197,7 @@ export default function BattleUi(props) {
                 idx={i}
                 isSelected={isSelectedAsTargetArr[i]}
                 setIsSelected={setIsSelectedAsTargetArr}
+                isAlive={isEnemyAlive[enemyIds.current[i]]}
               />
             );
           })}
@@ -197,7 +207,3 @@ export default function BattleUi(props) {
   );
 }
 
-function getPokemonById(statsObj, id, isEnemy = false) {
-  if (isEnemy) return statsObj.enemys.filter(enem => enem.id === id)[0];
-  return statsObj.players.filter(player => player.id === id)[0];
-}

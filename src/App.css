@@ -245,6 +245,9 @@
   padding: 1em;
   background: rgba(222, 255, 222, 0.8);
 }
+img.isDead {
+  filter: grayscale(100%);
+}
 
 progress.bar {
   -webkit-appearance: none;

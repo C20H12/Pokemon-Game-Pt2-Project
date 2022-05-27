@@ -1,3 +1,5 @@
+import {randint} from './utils.jsx'
+
 /**
  * A function to handle the complex state actions that the Reducer offers, including attack and defence
  * @param {Object} state - the current full stats of the pokemon, mutable
@@ -60,14 +62,3 @@ export const reducerFn = (state, action) => {
   }
 };
 
-/**
- * Function that gets a random integer between 2 numbers, inclusive
- * @param {number} min - the minimum in the number range
- * @param {number} max - the maximum in the number range
- * @returns {number} - a random integer number
- */
-function randint(min, max) {
-  return Math.floor(
-    Math.random() * (Math.ceil(max) - Math.floor(min) + 1) + Math.ceil(min)
-  );
-}
