@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 /**
  * the part at the top showing how many are selected and the start button
@@ -10,6 +10,8 @@ import React from "react";
  */
 export default function SelectCounter(props) {
   const { count, enemCount, setStart } = props;
+
+  const [shouldShowHelp, setShouldShowHelp] = useState(false);
 
   return (
     <div className="counter">
@@ -32,6 +34,23 @@ export default function SelectCounter(props) {
           NOT READY
         </button>
       )}
+      <div
+        className="question"
+        onMouseEnter={() => setShouldShowHelp(true)}
+        onMouseLeave={() => setShouldShowHelp(false)}
+      >
+        ?
+      </div>
+      {shouldShowHelp ? <div className="helpMsgBox">
+        <ul>
+          <li>Health: the Hp, a pokemon dies when this reaches 0</li>
+          <li>Attack Multiplier: the damage it can deal, n/20 &lt;= f(n) &lt;= 3n/10, n is this number</li>
+          <li>Defense: chance to resist 25% of incoming damage</li>
+          <li>SP Attack: chance to deal 50% more damage</li>
+          <li>SP Defense: chance to resist 50% of incoming damage</li>
+          <li>Speed: chance to dodge an attack, taking 0 damage</li>
+        </ul>
+      </div> : null}
     </div>
   );
 }

@@ -7,7 +7,7 @@
   border: 2px solid black;
   border-radius: 5px;
   margin: 10px auto 10px auto;
-  width: 200px;
+  width: 230px;
   text-align: center;
   background-color: #e5ffff;
 }
@@ -15,7 +15,7 @@
   border: 2px solid black;
   border-radius: 5px;
   margin: 10px auto 10px auto;
-  width: 200px;
+  width: 230px;
   text-align: center;
   background-color: #e5ffff;
   box-shadow: 0 0 25px #fe9a9a;
@@ -24,7 +24,7 @@
   border: 4px solid red;
   border-radius: 5px;
   margin: 10px auto 10px auto;
-  width: 200px;
+  width: 230px;
   text-align: center;
   background-color: #e5ffff;
   box-shadow: 0 0 25px #fe9a9a;
@@ -118,6 +118,32 @@
 }
 .counter>h3{
   margin: .5em 0 1em 0;
+}
+.counter>.question {
+  position: absolute;
+  display: inline-block;
+  left: 20px;
+  bottom: 20px;
+  border: 2px solid blue;
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  line-height: 4rem;
+  font-weight: bolder;
+  font-size: 2rem;
+}
+.counter>.question:hover{
+  background-color: #b7c3fe;
+}
+.counter>.helpMsgBox {
+  position: absolute;
+  border: 2px solid black;
+  border-radius: 15px;
+  background-color: #f5ffc2;
+  color: #0a003d;
+  text-align: left;
+  margin-top: 2em;
+  padding: 5px;
 }
 
 .goButton{
