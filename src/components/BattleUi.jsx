@@ -201,7 +201,7 @@ export default function BattleUi(props) {
       let maxUsebleAttack = 3;
       if (currEnemy.eg < 35) maxUsebleAttack = 2;
       if (currEnemy.eg < 25) maxUsebleAttack = 1;
-      if (currEnemy.eg < 15) {
+      if (currEnemy.eg < 15 || randint(1, 20) === 10) {
         statsDispatch({
           type: "REFILL",
           payload: { attackerId: currEnemy.id, isEnemyAttacking: true },
