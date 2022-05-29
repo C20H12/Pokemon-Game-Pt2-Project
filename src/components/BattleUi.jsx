@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect, useRef } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import {
   BattlePlayer as Player,
   BattleEnemy as Enemy,
