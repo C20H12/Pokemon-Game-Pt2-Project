@@ -3,6 +3,7 @@ import {
   BattlePlayer as Player,
   BattleEnemy as Enemy,
 } from "./BattlePlayerAndEnemy.jsx";
+import PlayerControls from "./PlayerControls.jsx";
 import { reducerFn } from "../functions/reducer.jsx";
 import {
   getPokemonById,
@@ -235,15 +236,31 @@ export default function BattleUi(props) {
       >
         ?
       </div>
-      {shouldShowHelp ? <div className="battleHelpMsgBox">
-        <ul>
-          <li><b>Selecting:</b> a member on both the player and enemy sides must be selected to proceed</li>
-          <li><b>Attacking:</b> use the Attack 1-3 buttons, each represents 'weak', 'medium', 'strong' respectively</li>
-          <li><b>Turns:</b> each member can only act once per turn</li>
-          <li><b>End turn:</b> will trigger the enemy's moves, members that did not act this turn will get an refill of EG</li>
-          <li><b>Winning/losing:</b> if all of the members on a side has died, the game will end</li>
-        </ul>
-      </div> : null}
+      {shouldShowHelp ? (
+        <div className="battleHelpMsgBox">
+          <ul>
+            <li>
+              <b>Selecting:</b> a member on both the player and enemy sides must
+              be selected to proceed
+            </li>
+            <li>
+              <b>Attacking:</b> use the Attack 1-3 buttons, each represents
+              'weak', 'medium', 'strong' respectively
+            </li>
+            <li>
+              <b>Turns:</b> each member can only act once per turn
+            </li>
+            <li>
+              <b>End turn:</b> will trigger the enemy's moves, members that did
+              not act this turn will get an refill of EG
+            </li>
+            <li>
+              <b>Winning/losing:</b> if all of the members on a side has died,
+              the game will end
+            </li>
+          </ul>
+        </div>
+      ) : null}
       <div className="battleUiWindow">
         <div className="playerWrap">
           {statsState.players.map((player, i) => {
@@ -261,87 +278,29 @@ export default function BattleUi(props) {
             );
           })}
 
-          {isSelectedAsAttackerArr.includes(true) &&
-          isSelectedAsTargetArr.includes(true) &&
-          isEnemyAlive[selectedTarget] &&
-          isPlayerAlive[selectedAttacker] &&
-          !isPlayerActedThisTurn[selectedAttacker] ? (
-            <div className="controls">
-              {Array(3)
-                .fill(null)
-                .map((_, i) => {
-                  return (
-                    <React.Fragment key={i}>
-                      {isAttackAvailable[i] ? (
-                        <button
-                          data-attack={i + 1}
-                          onClick={evnt =>
-                            handleAttack(
-                              parseInt(evnt.target.dataset.attack, 10),
-                              selectedTarget,
-                              selectedAttacker
-                            )
-                          }
-                          data-tip-text={(() => {
-                            const attk = getPokemonById(
-                              statsState,
-                              selectedAttacker
-                            ).attack;
-                            if (i === 0) {
-                              return `Damage: ${~~(attk * 0.05)} - ${~~(
-                                attk * 0.1
-                              )} HP\n Costs: 7 - 15 EG`;
-                            } else if (i === 1) {
-                              return `Damage: ${~~(attk * 0.1)} - ${~~(
-                                attk * 0.2
-                              )} HP\n Costs: 16 - 25 EG`;
-                            } else if (i === 2) {
-                              return `Damage: ${~~(attk * 0.2)} - ${~~(
-                                attk * 0.3
-                              )} HP\n Costs: 26 - 35 EG`;
-                            }
-                          })()}
-                        >
-                          Attack {i + 1}
-                        </button>
-                      ) : (
-                        <button
-                          key={i}
-                          disabled
-                          data-tip-text="Not enough energy to use this move!"
-                        >
-                          Attack {i + 1}
-                        </button>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-            </div>
-          ) : (
-            <div className="controls">
-              {Array(3)
-                .fill(null)
-                .map((_, i) => {
-                  return (
-                    <button
-                      key={i}
-                      disabled
-                      data-tip-text={(() => {
-                        if (isEnemyAlive[selectedTarget] === false)
-                          return "The selected enemy has been killed!";
-                        else if (isPlayerActedThisTurn[selectedAttacker])
-                          return "Already acted this turn!";
-                        else if (isPlayerAlive[selectedAttacker] === false)
-                          return "This member has died!";
-                        else return "Need to select a target and an attacker!";
-                      })()}
-                    >
-                      Attack {i + 1}
-                    </button>
-                  );
-                })}
-            </div>
-          )}
+          <PlayerControls
+            isAllControlsAvailable={
+              isSelectedAsAttackerArr.includes(true) &&
+              isSelectedAsTargetArr.includes(true) &&
+              isEnemyAlive[selectedTarget] &&
+              isPlayerAlive[selectedAttacker] &&
+              !isPlayerActedThisTurn[selectedAttacker]
+            }
+            isAttackAvailableArr={isAttackAvailable}
+            isSelectedEnemyAlive={isEnemyAlive[selectedTarget]}
+            isSelectedPlayerAlive={isPlayerAlive[selectedAttacker]}
+            hasPlayerActed={isPlayerActedThisTurn[selectedAttacker]}
+            selectedAttackerAttackVal={
+              getPokemonById(statsState, selectedAttacker)?.attack
+            }
+            attackFunction={evnt =>
+              handleAttack(
+                parseInt(evnt.target.dataset.attack, 10),
+                selectedTarget,
+                selectedAttacker
+              )
+            }
+          />
         </div>
         <div className="enemyWrap">
           <div className="controls">
