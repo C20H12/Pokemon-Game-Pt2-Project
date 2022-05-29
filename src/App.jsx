@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import "./App.css";
 import PokemonStatList from "./components/PokemonStatList.jsx";
 import SelectCounter from "./components/SelectCounter.jsx";
 import BattleUi from "./components/BattleUi.jsx";
+
+import "./css/mainPage.css";
+import "./css/selectionList.css";
+import "./css/battlePage.css";
+
 
 /**
  * The main component of the application

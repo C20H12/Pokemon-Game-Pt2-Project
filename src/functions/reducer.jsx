@@ -1,4 +1,4 @@
-import { randint } from "./utils.jsx";
+import { getPokemonById, randint } from "./utils.jsx";
 
 /**
  * A function to handle the complex state actions that the Reducer offers, including attack and defence
@@ -9,13 +9,16 @@ import { randint } from "./utils.jsx";
  * @param {number} action.payload.attackType - the current attack move that is used
  * @param {number} action.payload.targetId - the target pokemon's id
  * @param {number} action.payload.attackerId - the attacker pokemon's id
+ * @param {boolean} action.payload.isEnemyAttacking - is the attack comming from the enemy? if not, it's from the player
  * @returns {Object} - the new, modified stats of the pokemon
  * @throws - An error if the developer inputs an incorrect action type
  */
 export const reducerFn = (state, action) => {
-  const attackAmount = state.players.filter(
-    player => player.id === action.payload?.attackerId
-  )[0]?.attack;
+  const attackAmount = getPokemonById(
+    state,
+    action.payload?.attackerId,
+    action.payload?.isEnemyAttacking
+  )?.attack;
 
   let egCost, damage;
   if (action.payload?.attackType === 1) {
@@ -30,49 +33,75 @@ export const reducerFn = (state, action) => {
   }
 
   switch (action.type) {
-    case "ATTACK": {
-      return {
-        players: state.players.map(elem => {
-          if (elem.id == action.payload.attackerId) {
-            return { ...elem, eg: elem.eg - egCost };
-          } else {
-            return elem;
-          }
-        }),
-        enemys: state.enemys.map(elem => {
-          if (elem.id == action.payload.targetId) {
-            return {
-              ...elem,
-              hp: elem.hp - damage,
-              modalContent: damage,
-            };
-          } else {
-            return elem;
-          }
-        }),
-      };
-    }
+    case "ATTACK":
+      console.log("standard attack");
 
-    case "MISSED": {
+      return processStatsState(
+        state,
+        egCost,
+        damage,
+        action.payload.targetId,
+        action.payload.attackerId,
+        action.payload.isEnemyAttacking,
+        damage.toString()
+      );
+
+    case "MISSED":
       console.log("missed");
 
-      return {
-        players: state.players.map(elem => {
-          if (elem.id == action.payload.attackerId) {
-            return { ...elem, eg: elem.eg - egCost };
-          } else {
-            return elem;
-          }
-        }),
-        enemys: state.enemys.map(elem => {
-          if (elem.id === action.payload.targetId)
-            return { ...elem, modalContent: "MISS" };
-          return elem;
-        }),
-      };
-    }
+      return processStatsState(
+        state,
+        egCost,
+        0,
+        action.payload.targetId,
+        action.payload.attackerId,
+        action.payload.isEnemyAttacking,
+        "MISSED"
+      );
 
-    case "CLOSE_MODAL": {
+    case "ATTACK_SP":
+      console.log("1.5x attack");
+      const spDamage = ~~(damage * 1.5);
+
+      return processStatsState(
+        state,
+        egCost,
+        spDamage,
+        action.payload.targetId,
+        action.payload.attackerId,
+        action.payload.isEnemyAttacking,
+        `CRIT \n${spDamage}`
+      );
+
+    case "DEFENDED":
+      console.log("resisted");
+      const dfDamage = ~~(damage * 0.75);
+
+      return processStatsState(
+        state,
+        egCost,
+        dfDamage,
+        action.payload.targetId,
+        action.payload.attackerId,
+        action.payload.isEnemyAttacking,
+        `RESIST \n${dfDamage}`
+      );
+
+    case "DEFENDED_SP":
+      console.log("damage halved");
+      const spdfDamage = ~~(damage * 0.5);
+
+      return processStatsState(
+        state,
+        egCost,
+        spdfDamage,
+        action.payload.targetId,
+        action.payload.attackerId,
+        action.payload.isEnemyAttacking,
+        `SHIELDED \n${spdfDamage}`
+      );
+
+    case "CLOSE_MODAL":
       return {
         players: state.players.map(elem => {
           return { ...elem, modalContent: "" };
@@ -81,9 +110,71 @@ export const reducerFn = (state, action) => {
           return { ...elem, modalContent: "" };
         }),
       };
-    }
+
+    case "REFILL":
+      return processStatsState(
+        state,
+        -10,
+        0,
+        null,
+        action.payload.attackerId,
+        action.payload.isEnemyAttacking,
+        ""
+      );
 
     default:
       throw new Error("shit, wrong action type");
   }
 };
+
+/**
+ * Function that processes the stat object given details of the operation
+ * @param {Object} stateObj - the current full stats of the pokemon, mutable
+ * @param {number} eg - the energy cost of this operation
+ * @param {number} dmg - the damage the operation will deal to the target
+ * @param {number} target - the id of the targeted pokemon
+ * @param {number} attacker - the id of the attacker pokemon
+ * @param {boolean} isEnemyAttacking - flag to check if the enemy is attacking or the player
+ * @param {string} modal - the text to display on the targeting side
+ * @returns - the processed full stats of the pokemon
+ */
+function processStatsState(
+  stateObj,
+  eg,
+  dmg,
+  target,
+  attacker,
+  isEnemyAttacking,
+  modal
+) {
+  let attackingSide, targetSide;
+  if (isEnemyAttacking) {
+    attackingSide = "enemys";
+    targetSide = "players";
+  } else {
+    attackingSide = "players";
+    targetSide = "enemys";
+  }
+
+  const processedObj = {
+    [attackingSide]: stateObj[attackingSide].map(elem => {
+      if (elem.id === attacker) {
+        return { ...elem, eg: elem.eg - eg };
+      } else {
+        return elem;
+      }
+    }),
+    [targetSide]: stateObj[targetSide].map(elem => {
+      if (elem.id === target) {
+        return {
+          ...elem,
+          hp: elem.hp - dmg,
+          modalContent: modal,
+        };
+      } else {
+        return elem;
+      }
+    }),
+  };
+  return processedObj;
+}

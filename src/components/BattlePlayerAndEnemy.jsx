@@ -10,7 +10,7 @@ import BattleInfoBox from "./BattleInfoBox.jsx";
  * @returns {JSX.Element} - an element containing the pokemon's image and it's info box
  */
 export function BattlePlayer(props) {
-  const { id, stats, setAttacker, idx, isSelected, setIsSelected } = props;
+  const { id, stats, setAttacker, idx, isSelected, setIsSelected, isAlive } = props;
 
   const [shouldShowInfo, setShouldShowInfo] = useState(false);
 
@@ -37,6 +37,7 @@ export function BattlePlayer(props) {
       onClick={handleSelect}
     >
       <img
+        className={isAlive ? "alive" : "isDead"}
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
         alt="err"
       />
@@ -46,7 +47,9 @@ export function BattlePlayer(props) {
         stats={stats}
         id={id}
       />
-      <div className="popup">{stats.modalContent}</div>
+      <div key={stats.modalContent} className="popup player">
+        {stats.modalContent}
+      </div>
     </div>
   );
 }
