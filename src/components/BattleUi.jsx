@@ -4,7 +4,7 @@ import {
   BattleEnemy as Enemy,
 } from "./BattlePlayerAndEnemy.jsx";
 import { reducerFn } from "../functions/reducer.jsx";
-import { getPokemonById } from "../functions/utils.jsx";
+import { getPokemonById, chanceToBoolean } from "../functions/utils.jsx";
 
 /**
  * The component for the main battle window
@@ -24,20 +24,22 @@ export default function BattleUi(props) {
       hp: stats[0].base_stat,
       eg: 100,
       attack: stats[1].base_stat,
-      def: stats[2].base_stat,
-      spAttack: stats[3].base_stat,
-      spDef: stats[4].base_stat,
-      speed: stats[5].base_stat,
+      def: stats[2].base_stat / 2,
+      spAttack: stats[3].base_stat / 2,
+      spDef: stats[4].base_stat / 2,
+      speed: stats[5].base_stat / 2,
+      modalContent: "",
     })),
     enemys: enemyStats.current.map((stats, i) => ({
       id: enemyIds.current[i],
       hp: stats[0].base_stat,
       eg: 100,
       attack: stats[1].base_stat,
-      def: stats[2].base_stat,
-      spAttack: stats[3].base_stat,
-      spDef: stats[4].base_stat,
-      speed: stats[5].base_stat,
+      def: stats[2].base_stat / 2,
+      spAttack: stats[3].base_stat / 2,
+      spDef: stats[4].base_stat / 2,
+      speed: stats[5].base_stat / 2,
+      modalContent: "",
     })),
   };
   const [statsState, statsDispatch] = useReducer(reducerFn, defaultStats);
@@ -87,14 +89,20 @@ export default function BattleUi(props) {
 
     console.log(currSelectionHp, isEnemyAlive);
 
-    if (currSelectionHp <= 0) isEnemyAlive[selectedTarget] = false;
+    if (currSelectionHp <= 0) setIsEnemyAlive(obj => ({...obj, [selectedTarget]: false}));
   }, [selectedTarget, statsState.enemys]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      statsDispatch({type: "CLOSE_MODAL"})
+    }, 3000);
+  }, statsState.players.map(p => p.eg))
 
   const handleAttack = e => {
     const dodge = getPokemonById(statsState, selectedTarget, true).speed;
-    console.log(dodge)
+
     const dispObj = {
-      type: "ATTACK",
+      type: chanceToBoolean(dodge) ? "MISSED" : "ATTACK",
       payload: {
         attackType: parseInt(e.target.dataset.attack, 10),
         targetId: selectedTarget,

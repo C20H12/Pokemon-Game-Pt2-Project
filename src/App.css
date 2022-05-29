@@ -296,3 +296,26 @@ progress.bar.under60::-webkit-progress-value {
   border-radius: 1em;
 }
 
+
+@keyframes popup {
+  0% {
+    transform: scale(-10%);
+    left: 2em;
+    bottom: 2em;
+  }
+  100% {
+    transform: scale(220%);
+    left: -2em;
+    bottom: 2em;
+  }
+}
+
+.popup {
+  position: absolute;
+  left: 2em;
+  bottom: 2em;
+  color: rgb(166, 121, 75);
+  text-shadow: #ffef95 0 0 10px;
+  animation: popup 3s;
+  transform: none;
+}

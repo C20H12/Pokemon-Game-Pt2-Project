@@ -1,4 +1,4 @@
-import {randint} from './utils.jsx'
+import { randint } from "./utils.jsx";
 
 /**
  * A function to handle the complex state actions that the Reducer offers, including attack and defence
@@ -13,27 +13,24 @@ import {randint} from './utils.jsx'
  * @throws - An error if the developer inputs an incorrect action type
  */
 export const reducerFn = (state, action) => {
+  const attackAmount = state.players.filter(
+    player => player.id === action.payload?.attackerId
+  )[0]?.attack;
+
+  let egCost, damage;
+  if (action.payload?.attackType === 1) {
+    egCost = randint(7, 15);
+    damage = randint(attackAmount * 0.05, attackAmount * 0.1);
+  } else if (action.payload?.attackType === 2) {
+    egCost = randint(16, 25);
+    damage = randint(attackAmount * 0.1, attackAmount * 0.2);
+  } else if (action.payload?.attackType === 3) {
+    egCost = randint(26, 35);
+    damage = randint(attackAmount * 0.2, attackAmount * 0.3);
+  }
+
   switch (action.type) {
     case "ATTACK": {
-      const attackAmount = state.players.filter(
-        player => player.id === action.payload.attackerId
-      )[0].attack;
-
-      let egCost, damage;
-      if (action.payload.attackType === 1){
-        egCost = randint(7, 15);
-        damage = randint(attackAmount * 0.05, attackAmount * 0.1);
-      }
-      else if (action.payload.attackType === 2){
-        egCost = randint(16, 25);
-        damage = randint(attackAmount * 0.1, attackAmount * 0.2);
-      }
-      else if (action.payload.attackType === 3){
-        egCost = randint(26, 35);
-        damage = randint(attackAmount * 0.2, attackAmount * 0.3);
-      }
-      
-
       return {
         players: state.players.map(elem => {
           if (elem.id == action.payload.attackerId) {
@@ -47,6 +44,7 @@ export const reducerFn = (state, action) => {
             return {
               ...elem,
               hp: elem.hp - damage,
+              modalContent: damage,
             };
           } else {
             return elem;
@@ -54,11 +52,38 @@ export const reducerFn = (state, action) => {
         }),
       };
     }
-    case "MISSED":
-      console.log(111);
+
+    case "MISSED": {
+      console.log("missed");
+
+      return {
+        players: state.players.map(elem => {
+          if (elem.id == action.payload.attackerId) {
+            return { ...elem, eg: elem.eg - egCost };
+          } else {
+            return elem;
+          }
+        }),
+        enemys: state.enemys.map(elem => {
+          if (elem.id === action.payload.targetId)
+            return { ...elem, modalContent: "MISS" };
+          return elem;
+        }),
+      };
+    }
+
+    case "CLOSE_MODAL": {
+      return {
+        players: state.players.map(elem => {
+          return { ...elem, modalContent: "" };
+        }),
+        enemys: state.enemys.map(elem => {
+          return { ...elem, modalContent: "" };
+        }),
+      };
+    }
 
     default:
       throw new Error("shit, wrong action type");
   }
 };
-

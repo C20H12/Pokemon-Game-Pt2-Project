@@ -22,6 +22,11 @@ export function getPokemonById(statsObj, id, isEnemy = false) {
   return statsObj.players.filter(player => player.id === id)[0];
 }
 
-export function getBooleanByChance(percent) {
-  return Math.random() * 100 < percent;
+/**
+ * Function that gets a boolean by a percentage chance
+ * @param {number} percent - a percentage number betweeen 1 - 100
+ * @returns {boolean} - a true/false selected based on the percentage
+ */
+export function chanceToBoolean(percent) {
+  return Math.random() * 100 <= percent;
 }

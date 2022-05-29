@@ -114,10 +114,12 @@ function PokemonStatsImg(props) {
       />
       <ul className="detailStats">
         {detailStats.stats.map((value, i) => {
+          const statName = value.stat.name;
+          const shouldHalfArr = ["defense", "special-attack", "special-defense", "speed"];
           return (
             <li key={i}>
-              {value.stat.name}
-              <span className="detailStatsValue">{value.base_stat}</span>
+              {statName}
+              <span className="detailStatsValue">{shouldHalfArr.includes(statName) ? `${~~(value.base_stat/2)}%` : value.base_stat}</span>
             </li>
           );
         })}
