@@ -96,7 +96,7 @@ function PokemonStatsImg(props) {
     }
   };
 
-  if (loading) return <img src="/src/assets/loading.gif" className="loadingImg" />;
+  if (loading) return <img src="/public/assets/loading.gif" className="loadingImg" />;
 
   return (
     <div
