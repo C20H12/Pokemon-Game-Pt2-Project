@@ -1,8 +1,9 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer, useEffect, useRef } from "react";
 import {
   BattlePlayer as Player,
   BattleEnemy as Enemy,
 } from "./BattlePlayerAndEnemy.jsx";
+import GameOver from "./GameOver.jsx";
 import PlayerControls from "./PlayerControls.jsx";
 import { reducerFn } from "../functions/reducer.jsx";
 import {
@@ -89,8 +90,8 @@ export default function BattleUi(props) {
   });
 
   const [battleState, setBattleState] = useState("ongoing");
-
   const [shouldShowHelp, setShouldShowHelp] = useState(false);
+  const [battleLog, setBattleLog] = useState("");
 
   useEffect(() => {
     setIsAttackAvailable(arr => arr.slice().fill(true));
@@ -133,8 +134,14 @@ export default function BattleUi(props) {
   ]);
 
   useEffect(() => {
-    if (!Object.values(isEnemyAlive).includes(true)) setBattleState("win");
-    if (!Object.values(isPlayerAlive).includes(true)) setBattleState("lose");
+    if (!Object.values(isEnemyAlive).includes(true))
+      setTimeout(() => {
+        setBattleState("win");
+      }, 1500);
+    if (!Object.values(isPlayerAlive).includes(true))
+      setTimeout(() => {
+        setBattleState("lose");
+      }, 1500);
   }, [isEnemyAlive, isPlayerAlive]);
 
   /**
@@ -151,18 +158,58 @@ export default function BattleUi(props) {
     isEnemyAttacking = false
   ) => {
     const target = getPokemonById(statsState, attackTarget, !isEnemyAttacking);
+    const attacker = getPokemonById(
+      statsState,
+      attackAttacker,
+      isEnemyAttacking
+    );
     const tDodge = target.speed;
     const tDef = target.def;
-    const tSPAttack = target.spAttack;
     const tSPDef = target.spDef;
+    const aSPAttack = attacker.spAttack;
 
     let type;
-    if (chanceToBoolean(tDodge)) type = "MISSED";
-    else if (chanceToBoolean(tDef)) type = "DEFENDED";
-    else if (chanceToBoolean(tSPAttack)) type = "ATTACK_SP";
-    else if (chanceToBoolean(tSPDef)) type = "DEFENDED_SP";
-    else type = "ATTACK";
-
+    if (chanceToBoolean(tDodge)) {
+      type = "MISSED";
+      setBattleLog(
+        msg =>
+          (isEnemyAttacking ? "The Enemy" : "You") +
+          " missed the target\n\n" +
+          msg
+      );
+    } else if (chanceToBoolean(tDef)) {
+      type = "DEFENDED";
+      setBattleLog(
+        msg =>
+          (isEnemyAttacking ? "You" : "The Enemy") +
+          " defended the attack\n\n" +
+          msg
+      );
+    } else if (chanceToBoolean(aSPAttack)) {
+      type = "ATTACK_SP";
+      setBattleLog(
+        msg =>
+          (isEnemyAttacking ? "The Enemy" : "You") +
+          " dealed critical damage\n\n" +
+          msg
+      );
+    } else if (chanceToBoolean(tSPDef)) {
+      type = "DEFENDED_SP";
+      setBattleLog(
+        msg =>
+          (isEnemyAttacking ? "You" : "The Enemy") +
+          " shielded the attack\n\n" +
+          msg
+      );
+    } else {
+      type = "ATTACK";
+      setBattleLog(
+        msg =>
+          (isEnemyAttacking ? "The Enemy" : "You") +
+          " attacked normally\n\n" +
+          msg
+      );
+    }
     const dispObj = {
       type,
       payload: {
@@ -183,6 +230,9 @@ export default function BattleUi(props) {
       const newObj = { ...obj };
       Object.keys(obj).forEach(objKey => {
         if (!obj[objKey]) {
+          setBattleLog(
+            msg => "Your members has refilled some energy\n\n" + msg
+          );
           statsDispatch({
             type: "REFILL",
             payload: { attackerId: objKey, isEnemyAttacking: false },
@@ -203,6 +253,9 @@ export default function BattleUi(props) {
       if (currEnemy.eg < 35) maxUsebleAttack = 2;
       if (currEnemy.eg < 25) maxUsebleAttack = 1;
       if (currEnemy.eg < 15 || randint(1, 20) === 10) {
+        setBattleLog(
+          msg => "The enemy's members has refilled some energy\n\n" + msg
+        );
         statsDispatch({
           type: "REFILL",
           payload: { attackerId: currEnemy.id, isEnemyAttacking: true },
@@ -221,9 +274,9 @@ export default function BattleUi(props) {
   };
 
   if (battleState === "win") {
-    return <div>you win</div>;
+    return <GameOver isWin={true} battleLog={battleLog} />;
   } else if (battleState === "lose") {
-    return <div>you lost</div>;
+    return <GameOver isWin={false} battleLog={battleLog} />;
   }
 
   return (
@@ -328,6 +381,7 @@ export default function BattleUi(props) {
           })}
         </div>
       </div>
+      <textarea id="battleLog" rows="10" value={battleLog} readOnly />
     </>
   );
 }

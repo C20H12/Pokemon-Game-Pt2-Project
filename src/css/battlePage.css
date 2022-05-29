@@ -209,3 +209,22 @@ progress.bar.under60::-webkit-progress-value {
   padding: 5px;
   z-index: 99;
 }
+
+
+#battleLog {
+  display: block;
+  margin: 2rem auto;
+  width: 70vw;
+  border: none;
+  resize: none;
+  background-color: #9cffaec7;
+  padding-left: 2rem;
+  font-size: 1rem;
+}
+#battleLog:focus {
+  outline: none;
+}
+body::-webkit-scrollbar {
+  width: 0;
+}
+

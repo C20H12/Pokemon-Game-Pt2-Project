@@ -14,10 +14,6 @@ export function BattlePlayer(props) {
 
   const [shouldShowInfo, setShouldShowInfo] = useState(false);
 
-  const handleShowInfo = () => {
-    setShouldShowInfo(bool => (bool = !bool));
-  };
-
   const handleSelect = () => {
     setAttacker(id);
     setIsSelected(arr => {
@@ -32,8 +28,8 @@ export function BattlePlayer(props) {
   return (
     <div
       className={isSelected ? "playerSelected" : "player"}
-      onMouseEnter={handleShowInfo}
-      onMouseLeave={handleShowInfo}
+      onMouseEnter={() => setShouldShowInfo(true)}
+      onMouseLeave={() => setShouldShowInfo(false)}
       onClick={handleSelect}
     >
       <img
@@ -70,10 +66,6 @@ export function BattleEnemy(props) {
 
   const [shouldShowInfo, setShouldShowInfo] = useState(false);
 
-  const handleShowInfo = () => {
-    setShouldShowInfo(bool => (bool = !bool));
-  };
-
   const handleSelect = () => {
     setTarget(id);
     setIsSelected(arr => {
@@ -88,8 +80,8 @@ export function BattleEnemy(props) {
   return (
     <div
       className={isSelected ? "enemySelected" : "enemy"}
-      onMouseEnter={handleShowInfo}
-      onMouseLeave={handleShowInfo}
+      onMouseEnter={() => setShouldShowInfo(true)}
+      onMouseLeave={() => setShouldShowInfo(false)}
       onClick={handleSelect}
     >
       <img

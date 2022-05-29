@@ -7,6 +7,7 @@ import BattleUi from "./components/BattleUi.jsx";
 import "./css/mainPage.css";
 import "./css/selectionList.css";
 import "./css/battlePage.css";
+import "./css/gameOverPage.css";
 
 
 /**
