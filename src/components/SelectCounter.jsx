@@ -43,12 +43,12 @@ export default function SelectCounter(props) {
       </div>
       {shouldShowHelp ? <div className="helpMsgBox">
         <ul>
-          <li>Health: the Hp, a pokemon dies when this reaches 0</li>
-          <li>Attack Multiplier: the damage it can deal, n/20 &lt;= f(n) &lt;= 3n/10, n is this number</li>
-          <li>Defense: chance to resist 25% of incoming damage</li>
-          <li>SP Attack: chance to deal 50% more damage</li>
-          <li>SP Defense: chance to resist 50% of incoming damage</li>
-          <li>Speed: chance to dodge an attack, taking 0 damage</li>
+          <li><b>Health:</b> the Hp, a pokemon dies when this reaches 0</li>
+          <li><b>Attack Multiplier:</b> the damage it can deal, n/20 &lt;= f(n) &lt;= 3n/10, n is this number</li>
+          <li><b>Defense:</b> chance to resist 25% of incoming damage</li>
+          <li><b>SP Attack:</b> chance to deal 50% more damage</li>
+          <li><b>SP Defense:</b> chance to resist 50% of incoming damage</li>
+          <li><b>Speed:</b> chance to dodge an attack, taking 0 damage</li>
         </ul>
       </div> : null}
     </div>
