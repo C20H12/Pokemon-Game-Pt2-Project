@@ -112,6 +112,8 @@ export const reducerFn = (state, action) => {
       };
 
     case "REFILL":
+      console.log("refilled")
+
       return processStatsState(
         state,
         -10,

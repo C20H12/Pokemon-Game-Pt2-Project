@@ -87,6 +87,10 @@ export default function BattleUi(props) {
     [statsState.players[2].id]: true,
   });
 
+  const [battleState, setBattleState] = useState("ongoing");
+
+  const [shouldShowHelp, setShouldShowHelp] = useState(false);
+
   useEffect(() => {
     setIsAttackAvailable(arr => arr.slice().fill(true));
     const currSelectionEg = getPokemonById(statsState, selectedAttacker)?.eg;
@@ -108,12 +112,15 @@ export default function BattleUi(props) {
       setIsEnemyAlive(obj => ({ ...obj, [selectedTarget]: false }));
   }, [selectedTarget, statsState.enemys]);
 
-  useEffect(() => {
-    statsState.players.forEach(player => {
-      if (player.hp <= 0)
-        setIsPlayerAlive(obj => ({...obj, [player.id]: false}))
-    })
-  }, statsState.players.map(p => p.hp));
+  useEffect(
+    () => {
+      statsState.players.forEach(player => {
+        if (player.hp <= 0)
+          setIsPlayerAlive(obj => ({ ...obj, [player.id]: false }));
+      });
+    },
+    statsState.players.map(p => p.hp)
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -123,6 +130,11 @@ export default function BattleUi(props) {
     ...statsState.players.map(p => p.eg),
     ...statsState.enemys.map(e => e.eg),
   ]);
+
+  useEffect(() => {
+    if (!Object.values(isEnemyAlive).includes(true)) setBattleState("win");
+    if (!Object.values(isPlayerAlive).includes(true)) setBattleState("lose");
+  }, [isEnemyAlive, isPlayerAlive]);
 
   /**
    * Function that handles the attack and updates the statsState
@@ -179,6 +191,7 @@ export default function BattleUi(props) {
       });
       return newObj;
     });
+
     for (let i = 0; i < 3; i++) {
       const currEnemy = statsState.enemys[i];
       if (!isEnemyAlive[currEnemy.id]) continue;
@@ -206,9 +219,31 @@ export default function BattleUi(props) {
     }
   };
 
+  if (battleState === "win") {
+    return <div>you win</div>;
+  } else if (battleState === "lose") {
+    return <div>you lost</div>;
+  }
+
   return (
     <>
       <h1 className="battleTitle">Battle Started!</h1>
+      <div
+        className="battleQuestion"
+        onMouseEnter={() => setShouldShowHelp(true)}
+        onMouseLeave={() => setShouldShowHelp(false)}
+      >
+        ?
+      </div>
+      {shouldShowHelp ? <div className="battleHelpMsgBox">
+        <ul>
+          <li><b>Selecting:</b> a member on both the player and enemy sides must be selected to proceed</li>
+          <li><b>Attacking:</b> use the Attack 1-3 buttons, each represents 'weak', 'medium', 'strong' respectively</li>
+          <li><b>Turns:</b> each member can only act once per turn</li>
+          <li><b>End turn:</b> will trigger the enemy's moves, members that did not act this turn will get an refill of EG</li>
+          <li><b>Winning/losing:</b> if all of the members on a side has died, the game will end</li>
+        </ul>
+      </div> : null}
       <div className="battleUiWindow">
         <div className="playerWrap">
           {statsState.players.map((player, i) => {
