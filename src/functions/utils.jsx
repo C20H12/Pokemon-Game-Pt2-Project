@@ -34,7 +34,7 @@ export function chanceToBoolean(percent) {
 /**
  * Function to use inside an async block that can pause the execution for a set amount of seconds
  * @param {number} s - number of seconds to wait before next execution
- * @returns - a promise that resolves after s seconds
+ * @returns {Promise<any>} - a promise that resolves after s seconds
  */
 export function delaySeconds(s) {
   return new Promise(resolve => setTimeout(resolve, s*1000));

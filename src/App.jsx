@@ -12,7 +12,7 @@ import "./css/gameOverPage.css";
 
 /**
  * The main component of the application
- * @returns JSX.Element
+ * @returns {JSX.Element}
  */
 const App = () => {
   const [stat, setStat] = useState([]);
