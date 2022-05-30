@@ -25,6 +25,13 @@ export default function SelectCounter(props) {
       ) : (
         <h3>The enemy have {enemCount} pokemons left to select</h3>
       )}
+
+      <div className="winLoseCounter">
+        Your Record:
+        <h4>Wins: {localStorage.getItem("wins") || localStorage.setItem("wins", 0)}</h4>
+        <h4>Loses: {localStorage.getItem("loses") || localStorage.setItem("loses", 0)}</h4>
+      </div>
+
       {count === 0 && enemCount === 0 ? (
         <button className="goButton" onClick={() => setStart(true)}>
           GO

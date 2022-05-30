@@ -93,3 +93,12 @@ body {
 }
 
 
+.winLoseCounter {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  color: #989696;
+}
+.winLoseCounter>h4 {
+  margin: 10px auto;
+}
