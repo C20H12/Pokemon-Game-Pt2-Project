@@ -93,9 +93,11 @@ export default function BattleUi(props) {
   const [shouldShowHelp, setShouldShowHelp] = useState(false);
   const [battleLog, setBattleLog] = useState("");
 
+  // WATCH: chnages in any of the player values, and a change in selected players
+  // disableds attack btns if energy is low
   useEffect(() => {
     setIsAttackAvailable(arr => arr.slice().fill(true));
-    const currSelectionEg = getPokemonById(statsState, selectedAttacker)?.eg;
+    const currSelectionEg = getPokemonById(statsState, selectedAttacker)?.eg; // need to ? because initial render
 
     if (currSelectionEg < 15)
       setIsAttackAvailable(arr => arr.slice().fill(false));
@@ -103,6 +105,8 @@ export default function BattleUi(props) {
     else if (currSelectionEg < 35) setIsAttackAvailable([true, true, false]);
   }, [selectedAttacker, statsState.players]);
 
+  // WATCH: chnages in any of the enemy values, and a change in selected enemies
+  // disableds attack btns if enemy is dead
   useEffect(() => {
     const currSelectionHp = getPokemonById(
       statsState,
@@ -114,6 +118,8 @@ export default function BattleUi(props) {
       setIsEnemyAlive(obj => ({ ...obj, [selectedTarget]: false }));
   }, [selectedTarget, statsState.enemys]);
 
+  // WATCH: chnages in any of the player's hp
+  // disabled this player if hp is 0
   useEffect(
     () => {
       statsState.players.forEach(player => {
@@ -124,6 +130,8 @@ export default function BattleUi(props) {
     statsState.players.map(p => p.hp)
   );
 
+  // WATCH: chnages in any of the energy values
+  // closes the popup after a second
   useEffect(() => {
     setTimeout(() => {
       statsDispatch({ type: "CLOSE_MODAL" });
@@ -133,6 +141,9 @@ export default function BattleUi(props) {
     ...statsState.enemys.map(e => e.eg),
   ]);
 
+  // WATCH: chnages in the arrays of is player and enemy alive
+  // sets battle state to "win" if all enemies are dead
+  // sets battle state to "lose" if all players are dead
   useEffect(() => {
     if (!Object.values(isEnemyAlive).includes(true))
       setTimeout(() => {
